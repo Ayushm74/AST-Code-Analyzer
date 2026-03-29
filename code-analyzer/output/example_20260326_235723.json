@@ -1,0 +1,46 @@
+{
+  "file_name": "example.py",
+  "total_functions": 1,
+  "total_classes": 1,
+  "total_methods": 1,
+  "functions": [
+    {
+      "name": "factorial",
+      "arguments": [
+        "n"
+      ],
+      "docstring": "Return factorial recursively.",
+      "line_number": 4,
+      "complexity": {
+        "loops": 0,
+        "is_recursive": true
+      }
+    }
+  ],
+  "classes": [
+    {
+      "name": "Greeter",
+      "docstring": "Simple class with one method.",
+      "line_number": 11,
+      "methods": [
+        {
+          "name": "greet",
+          "arguments": [
+            "self",
+            "name"
+          ],
+          "docstring": "Return greeting text.",
+          "line_number": 14,
+          "complexity": {
+            "loops": 1,
+            "is_recursive": false
+          }
+        }
+      ]
+    }
+  ],
+  "complexity": {
+    "total_loops": 1,
+    "recursive_items": 1
+  }
+}

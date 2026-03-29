@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Code Analyzer</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>AI Code Analyzer</h1>
+        <p>Upload a Python file or paste Python code to analyze using AST.</p>
+
+        <form id="analyze-form" action="/result" method="POST" enctype="multipart/form-data">
+            <div id="drop-zone" class="drop-zone">
+                <p>Drag & drop a .py file here or click to select.</p>
+                <input id="file-input" type="file" name="file" accept=".py" />
+            </div>
+
+            <label for="code">Or paste code:</label>
+            <textarea id="code" name="code" rows="14" placeholder="def hello(name):&#10;    return f'Hello {name}'"></textarea>
+
+            <button type="submit">Analyze Code</button>
+        </form>
+
+        <div id="loading" class="loading hidden">Analyzing... please wait.</div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById("drop-zone");
+        const fileInput = document.getElementById("file-input");
+        const form = document.getElementById("analyze-form");
+        const loading = document.getElementById("loading");
+
+        dropZone.addEventListener("click", () => fileInput.click());
+        dropZone.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            dropZone.classList.add("dragover");
+        });
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.classList.remove("dragover");
+        });
+        dropZone.addEventListener("drop", (event) => {
+            event.preventDefault();
+            dropZone.classList.remove("dragover");
+            if (event.dataTransfer.files.length > 0) {
+                fileInput.files = event.dataTransfer.files;
+            }
+        });
+
+        form.addEventListener("submit", () => {
+            loading.classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>
+

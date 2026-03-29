@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analysis Result</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Result</h1>
+        <a class="back-link" href="/">Analyze another file</a>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% elif result %}
+            <div class="summary-cards">
+                <div class="card">Functions: <strong>{{ result.total_functions }}</strong></div>
+                <div class="card">Classes: <strong>{{ result.total_classes }}</strong></div>
+                <div class="card">Methods: <strong>{{ result.total_methods }}</strong></div>
+                <div class="card">Loops: <strong>{{ result.complexity.total_loops }}</strong></div>
+                <div class="card">Recursive: <strong>{{ result.complexity.recursive_items }}</strong></div>
+            </div>
+
+            <h2>Functions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Arguments</th>
+                        <th>Docstring</th>
+                        <th>Line</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for fn in result.functions %}
+                    <tr>
+                        <td>{{ fn.name }}</td>
+                        <td>{{ fn.arguments | join(", ") }}</td>
+                        <td>{{ fn.docstring or fn.suggested_docstring or "-" }}</td>
+                        <td>{{ fn.line_number }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4">No top-level functions found.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Classes & Methods</h2>
+            {% for cls in result.classes %}
+                <h3>Class: {{ cls.name }} (line {{ cls.line_number }})</h3>
+                <p><em>{{ cls.docstring or "-" }}</em></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Arguments</th>
+                            <th>Docstring</th>
+                            <th>Line</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for method in cls.methods %}
+                        <tr>
+                            <td>{{ method.name }}</td>
+                            <td>{{ method.arguments | join(", ") }}</td>
+                            <td>{{ method.docstring or method.suggested_docstring or "-" }}</td>
+                            <td>{{ method.line_number }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="4">No methods found.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No classes found.</p>
+            {% endfor %}
+
+            <h2>Raw JSON</h2>
+            <button id="copy-json">Copy JSON</button>
+            <pre id="json-content">{{ result | tojson(indent=2) }}</pre>
+        {% endif %}
+    </div>
+
+    <script>
+        const copyBtn = document.getElementById("copy-json");
+        const jsonContent = document.getElementById("json-content");
+        if (copyBtn && jsonContent) {
+            copyBtn.addEventListener("click", async () => {
+                await navigator.clipboard.writeText(jsonContent.textContent);
+                copyBtn.textContent = "Copied!";
+                setTimeout(() => { copyBtn.textContent = "Copy JSON"; }, 1200);
+            });
+        }
+    </script>
+</body>
+</html>
+
